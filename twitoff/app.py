@@ -3,6 +3,9 @@
 # FLASK_APP=hello.py flask run (from before when we were running the entire module)
 # now we want to point to something inside of the module... the specific package
 # FLASK_APP=twitoff:APP flask run
+# can also make a shell to play with flask app by doing
+# this is like a repl for the app
+# FLASK_APP=twitoff:APP flask shell
 
 from flask import Flask
 
