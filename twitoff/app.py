@@ -7,8 +7,10 @@
 # this is like a repl for the app
 # FLASK_APP=twitoff:APP flask shell
 
-from flask import Flask
-from .models import DB
+from flask import Flask, render_template, request
+from .models import DB, User
+
+# import routes
 
 def create_app():
     """Create and configure an instance of the Flask application."""
@@ -18,9 +20,10 @@ def create_app():
     # three slashes make it a relatitive path
     # set it up so that the app knows about the database
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['ENV'] = 'debug'
     # now make it so that the database knows about the app
     DB.init_app(app)
-
 
     # set route up and listen to the route
     # here, we are writing a function that will return the information that
@@ -29,16 +32,12 @@ def create_app():
     @app.route('/home')
     def home():
         # this will be shown when we are on the home page
-        return 'Welcome to TwitOff!'
+        users = User.query.all()
+        return render_template('base.html', title='Home', users=users)
+
     @app.route('/about')
     def about():
        # this will be shown when we are on the about page
        return 'About this app!'
-
-    # put debug mode on so that we don't have to restart our server each time
-    # we want to view a change
-    # THIS ISN'T WORKING
-    if __name__ == '__main__':
-        app.run(debug=True)
 
     return app
